@@ -1,15 +1,20 @@
 import User from '../models/User.js';
 
-/** Register logic
- * Check if user already exists - LocalStrategy handles this
+/** registerUser
+ * Since we have set username to be a unique field in the userSchema, a new user cannot use a username that already exists
+ * If they attempt this, the Model.create function throws a duplicate error
+ * This error is handled via error handling middleware
  */
-export async function registerUser(req, res) {
+export async function registerUser(req, res, next) {
   const { username, password } = req.body;
 
-  // User does not exist, create user
-  const user = await User.create({ username, password });
-
-  res.status(201).send({ user });
+  try {
+    // User does not exist, create user
+    const user = await User.create({ username, password });
+    res.status(201).json({ user });
+  } catch (err) {
+    next(err);
+  }
 }
 
 export async function loginUser(req, res) {
