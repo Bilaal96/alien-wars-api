@@ -54,3 +54,17 @@ export async function updatePassword(req, res, next) {
     next(err);
   }
 }
+
+export async function deleteUser(req, res, next) {
+  const userId = req.params.id;
+
+  try {
+    const deletedUser = await User.findByIdAndDelete(userId);
+    if (!deletedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json({ message: 'User deleted successfully', user: deletedUser });
+  } catch (err) {
+    next(err);
+  }
+}

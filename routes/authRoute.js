@@ -1,6 +1,7 @@
 import express from 'express';
 
 import {
+  deleteUser,
   loginUser,
   logoutUser,
   registerUser,
@@ -13,6 +14,7 @@ const router = express.Router();
 router.post('/signup', registerUser);
 router.post('/login', passport.authenticate('local'), loginUser);
 router.post('/logout', logoutUser);
+router.delete('/delete/:id', deleteUser);
 router.patch(
   '/update-password',
   passport.authenticate('local'),
