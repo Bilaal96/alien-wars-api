@@ -37,6 +37,7 @@ export async function logoutUser(req, res) {
   }
 }
 
+// TODO - requires session cookie (to authorize request) to test endpoint
 export async function updatePassword(req, res, next) {
   const { newPassword } = req.body;
   const userId = req.session.passport.user;
