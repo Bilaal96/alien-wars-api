@@ -36,3 +36,20 @@ export async function logoutUser(req, res) {
     res.status(200).json({ message: 'There is no user logged in' });
   }
 }
+
+export async function updatePassword(req, res, next) {
+  const { newPassword } = req.body;
+  const userId = req.session.passport.user;
+
+  try {
+    const user = await User.findByIdAndUpdate(userId, {
+      password: newPassword,
+    });
+
+    res
+      .status(200)
+      .json({ message: 'Password successfully updated', pw: user.password });
+  } catch (err) {
+    next(err);
+  }
+}

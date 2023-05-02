@@ -13,6 +13,11 @@ const router = express.Router();
 router.post('/signup', registerUser);
 router.post('/login', passport.authenticate('local'), loginUser);
 router.post('/logout', logoutUser);
+router.patch(
+  '/update-password',
+  passport.authenticate('local'),
+  updatePassword
+);
 
 router.use((err, req, res, next) => {
   // Duplicate Key Error (Email already in-use)
