@@ -1,9 +1,0 @@
-POST http://localhost:9090/api/character/create HTTP/1.1
-content-type: application/json
-Cookie: s%3ADMyoSPGb1K2TcDHUSsNCu-cqT58Hoy9l.xgoj%2F7c2guGUlJJoVJnM34v5SOMJCF5QsJKmHOXanYM
-
-{ 
-"username": "Mike",
-"race": "alien",
-"characterName": "dmytro"
-}
