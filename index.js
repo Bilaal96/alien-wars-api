@@ -42,7 +42,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get("/api", (req, res) => {
-  res.status(200).send("Test endpoint");
+  res.status(200).send({ msg: "Test endpoint" });
 });
 
 app.use("/api/auth", authRoute);
@@ -51,3 +51,5 @@ app.use("/api/character", characterRoute);
 app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);
 });
+
+export default app;
