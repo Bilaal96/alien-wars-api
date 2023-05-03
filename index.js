@@ -6,6 +6,7 @@ import MongoStore from "connect-mongo";
 
 import authRoute from "./routes/authRoute.js";
 import characterRoute from "./routes/characterRoute.js";
+import shopRoute from "./routes/shopRoute.js"
 
 dotenv.config();
 const PORT = 9090;
@@ -47,6 +48,8 @@ app.get("/api", (req, res) => {
 
 app.use("/api/auth", authRoute);
 app.use("/api/character", characterRoute);
+app.use("/api/shop", shopRoute);
+app.use("/api/battle", battleRoute)
 
 app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);
