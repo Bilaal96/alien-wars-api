@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "mocha"
+    "test": "NODE_ENV=test mocha"
   },
   "keywords": [],
   "author": "",

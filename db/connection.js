@@ -1,11 +1,11 @@
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-import fileDirName from '../utils/file-dir-name.js';
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import fileDirName from "../utils/file-dir-name.js";
 
 const { __dirname } = fileDirName(import.meta);
 
 // Testing lib will automatically set it to 'test'
-const ENV = process.env.NODE_ENV || 'development';
+const ENV = process.env.NODE_ENV || "development";
 
 // Tell dotenv where to load env vars from
 dotenv.config({
@@ -13,7 +13,7 @@ dotenv.config({
 });
 
 if (!process.env.MONGO_URI) {
-  throw new Error('MONGO_URI not set');
+  throw new Error("MONGO_URI not set");
 }
 
 // Connect to DB
@@ -23,7 +23,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    console.log('Connected to DB');
+    console.log("Connected to DB");
   })
   .catch((err) => {
     console.log(err);
