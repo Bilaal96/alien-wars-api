@@ -3,6 +3,7 @@ import express from 'express';
 import session from 'express-session';
 import passport from 'passport';
 import MongoStore from 'connect-mongo';
+import battleRoute from './routes/battleRoute.js';
 
 import authRoute from './routes/authRoute.js';
 import characterRoute from './routes/characterRoute.js';
@@ -49,7 +50,7 @@ app.get('/api', (req, res) => {
 app.use('/api/auth', authRoute);
 app.use('/api/character', characterRoute);
 app.use('/api/shop', shopRoute);
-// app.use("/api/battle", battleRoute)
+app.use("/api/battle", battleRoute)
 
 app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);

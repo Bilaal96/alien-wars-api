@@ -32,3 +32,12 @@ export async function createCharacter(req, res, next) {
     next(err);
   }
 }
+
+export async function getAllCharacters(req, res, next) {
+  try {
+    const characters = await Character.find();
+    res.status(200).send({ characters });
+  } catch (err) {
+    next(err);
+  }
+}
