@@ -1,11 +1,11 @@
 import express from "express";
+import { getAllCharacters } from "../controllers/characterController.js";
 
-
-import { postBattle } from "../controllers/battleController.js";
+// import { postBattle } from "../controllers/battleController.js";
 
 const router = express.Router();
 
-router.get("/", getItems);
+router.get("/", getAllCharacters);
 // load up all users on a battlefield
 // select a user & open up their individual
 // battle now (their stats & gold)
