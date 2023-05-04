@@ -41,3 +41,14 @@ export async function getAllCharacters(req, res, next) {
     next(err);
   }
 }
+
+export async function getCharacter(req, res, next) {
+  const { characterName } = req.params
+  console.log(characterName);
+  try {
+    const character = await Character.findOne({ characterName })
+    res.status(200).json({ character })
+  } catch (err) {
+    next(err)
+  }
+}
