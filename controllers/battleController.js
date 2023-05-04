@@ -29,10 +29,10 @@ export async function postTestBattle(req, res, next) {
         const defender = await Character.findOne({ characterName })
         const attacker = await Character.findOne({ characterName: attackingChar })
         console.log("defender: ", defender, "attacker: ", attacker);
-        if (attacker.attack > defender.defense) { console.log(`${attacker.characterName} wins ${defender.gold} gold!!`); }
+        if (attacker.attack > defender.defense) { console.log(`${attacker.characterName} wins ${defender.gold} gold!!, you did ${attacker.attack} damage and your opponent did ${defender.defense}`); }
         const result = await Battle.create(testBattle);
-        res.status(200).json({ result });
         console.log("result: ", result);
+        res.status(200).json({ result });
     } catch (err) {
         next(err)
     }
