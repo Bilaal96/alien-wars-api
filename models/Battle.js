@@ -1,14 +1,13 @@
-import mongoose from 'mongoose';
-import { v4 as uuidv4 } from 'uuid';
-import crypto from 'crypto'
+import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const battleSchema = new Schema({
-    attacker: { type: String, required: true },
-    defender: { type: String, required: true },
-    winner: { type: String, required: true },
-    winnersGold: { type: Number, required: true },
-    timeStamp: { type: Date, default: Date.now },
+  attacker: { type: String, required: true },
+  defender: { type: String, required: true },
+  winner: { type: String, required: true },
+  loser: { type: String, required: true },
+  spoils: { type: Number, required: true },
+  timeStamp: { type: Date, default: Date.now },
 });
 
-export const Battle = mongoose.model('battle', battleSchema);
+export const Battle = mongoose.model("battle", battleSchema);
