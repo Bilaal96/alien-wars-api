@@ -34,15 +34,17 @@ export async function postTestBattle(req, res, next) {
       loser = defender;
     }
 
-
     const attackersInfo = await Character.findOneAndUpdate(
       { characterName: attacker.characterName },
       { gold: attacker.gold }
     );
+    console.log(attackersInfo);
+
     const defendersInfo = await Character.findOneAndUpdate(
       { characterName: defender.characterName },
       { gold: defender.gold }
     );
+    console.log(defendersInfo);
     const result = await Battle.create({
       attacker: attacker.characterName,
       defender: defender.characterName,
