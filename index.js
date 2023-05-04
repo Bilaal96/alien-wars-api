@@ -49,7 +49,7 @@ app.get("/api", (req, res) => {
 });
 
 app.use('/api/auth', authRoute);
-app.use('/api/character', characterRoute);
+app.use('/api/characters', characterRoute);
 app.use('/api/shop', shopRoute);
 app.use("/api/battle", battleRoute)
 

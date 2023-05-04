@@ -12,8 +12,8 @@ export async function createCharacter(req, res, next) {
         race,
         username: username,
         characterName: characterName,
-        attack: 10,
-        defense: 11,
+        attack: 100,
+        defense: 110,
         gold: 100,
       });
       res.status(201).json({ character });
@@ -22,8 +22,8 @@ export async function createCharacter(req, res, next) {
         race,
         username: username,
         characterName: characterName,
-        attack: 11,
-        defense: 10,
+        attack: 110,
+        defense: 100,
         gold: 100,
       });
       res.status(201).json({ character });
@@ -33,10 +33,11 @@ export async function createCharacter(req, res, next) {
   }
 }
 
-export async function getAllCharacters(req, res, next) {
+export async function getCharacter(req, res, next) {
+  const { characterName } = req.params;
   try {
-    const characters = await Character.find();
-    res.status(200).send({ characters });
+    const character = await Character.findOne({ characterName });
+    res.status(200).json({ character });
   } catch (err) {
     next(err);
   }
