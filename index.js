@@ -3,8 +3,9 @@ import express from 'express';
 import session from 'express-session';
 import passport from 'passport';
 import MongoStore from 'connect-mongo';
-import battleRoute from './routes/battleRoute.js';
+import cors from 'cors';
 
+import battleRoute from './routes/battleRoute.js';
 import authRoute from './routes/authRoute.js';
 import characterRoute from './routes/characterRoute.js';
 import shopRoute from './routes/shopRoute.js';
@@ -18,6 +19,7 @@ dotenv.config();
 const PORT = 9090;
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
