@@ -5,11 +5,7 @@ import { postTestBattle } from "../controllers/battleController.js";
 
 const router = express.Router();
 
-// load up all users on a battlefield
-router.get("/", getAllCharacters);
 
-// select a user & open up their individual
-router.get("/:characterName", getCharacter)
 
 //post sends back the information (battle log)
 router.post("/:characterName/attack", postTestBattle)

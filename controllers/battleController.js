@@ -1,6 +1,7 @@
 import { Battle } from '../models/Battle.js';
 import { getCharacter } from './characterController.js';
 import Character from '../models/Character.js';
+import { battleRNGMaker } from '../utils/battle-utls.js';
 
 // export async function postBattle(req, res, next) {
 //     try {
@@ -22,17 +23,28 @@ const testBattle = [
 
 export async function postTestBattle(req, res, next) {
     const { characterName } = req.params
-    //take req.params as defender, attacker logic unsure, need to get request defender & attacker stats to implement battle logic
-    try {
 
-        const attackingChar = 'Muscleman'
+    const { username } = req.user
+
+    try {
         const defender = await Character.findOne({ characterName })
-        const attacker = await Character.findOne({ characterName: attackingChar })
-        console.log("defender: ", defender, "attacker: ", attacker);
-        if (attacker.attack > defender.defense) { console.log(`${attacker.characterName} wins ${defender.gold} gold!!, you did ${attacker.attack} damage and your opponent did ${defender.defense}`); }
+        const attacker = await Character.findOne({ username })
+        const victor = battleRNGMaker(attacker, defender)
+        if (victor.characterName === defender.characterName) {
+            defender.gold += attacker.gold
+            attacker.gold = 0
+
+        } else {
+            attacker.gold += defender.gold
+            defender.gold = 0;
+        }
+
+        const attackersInfo = await Character.findOneAndUpdate({ characterName: attacker.characterName }, { gold: attacker.gold })
+        const defendersInfo = await Character.findOneAndUpdate({ characterName: defender.characterName }, { gold: defender.gold })
+
+
         const result = await Battle.create(testBattle);
-        console.log("result: ", result);
-        res.status(200).json({ result });
+        res.status(200).json({ result, attackersInfo, defendersInfo });
     } catch (err) {
         next(err)
     }
