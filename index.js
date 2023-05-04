@@ -9,6 +9,11 @@ import authRoute from './routes/authRoute.js';
 import characterRoute from './routes/characterRoute.js';
 import shopRoute from './routes/shopRoute.js';
 
+import {
+  updateGoldAtInterval,
+  updateInterval,
+} from './utils/update-gold-at-interval.js';
+
 dotenv.config();
 const PORT = 9090;
 const app = express();
@@ -43,18 +48,19 @@ app.use(passport.initialize());
 // Hook into express-session and use the session for authentication
 app.use(passport.session());
 
-
-app.get("/api", (req, res) => {
-  res.status(200).send({ msg: "Test endpoint" });
+app.get('/api', (req, res) => {
+  res.status(200).send({ msg: 'Test endpoint' });
 });
 
 app.use('/api/auth', authRoute);
 app.use('/api/characters', characterRoute);
 app.use('/api/shop', shopRoute);
-app.use("/api/battle", battleRoute)
+app.use('/api/battle', battleRoute);
 
 app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);
+
+  setInterval(updateGoldAtInterval, updateInterval);
 });
 
 export default app;
