@@ -12,19 +12,13 @@ import { battleRNGMaker } from '../utils/battle-utls.js';
 //     }
 // }
 
-const testBattle = [
-    {
-        attacker: 'Muscleman',
-        defender: 'MSILAPPY',
-        winner: 'Muscleman',
-        winnersGold: 120,
-    }
-]
 
 export async function postTestBattle(req, res, next) {
     const { characterName } = req.params
 
     const { username } = req.user
+
+
 
     try {
         const defender = await Character.findOne({ characterName })
@@ -42,8 +36,20 @@ export async function postTestBattle(req, res, next) {
         const attackersInfo = await Character.findOneAndUpdate({ characterName: attacker.characterName }, { gold: attacker.gold })
         const defendersInfo = await Character.findOneAndUpdate({ characterName: defender.characterName }, { gold: defender.gold })
 
-
-        const result = await Battle.create(testBattle);
+        // const testBattle = [
+        //     {
+        //         attacker: attacker.characterName,
+        //         defender: defender.characterName,
+        //         winner: victor.characterName,
+        //         winnersGold: victor.gold,
+        //     }
+        // ]
+        const result = await Battle.create({
+            attacker: attacker.characterName,
+            defender: defender.characterName,
+            winner: victor.characterName,
+            spoils: victor.gold,
+        });
         res.status(200).json({ result, attackersInfo, defendersInfo });
     } catch (err) {
         next(err)
