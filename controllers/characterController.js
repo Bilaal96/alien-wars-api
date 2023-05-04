@@ -2,8 +2,8 @@ import Character from "../models/Character.js";
 
 // test branch
 export async function createCharacter(req, res, next) {
-  console.log(req.body);
-  console.log(req.session);
+  // console.log(req.body);
+  // console.log(req.session);
   const { race, characterName, username } = req.body;
   try {
     if (race === "human") {
@@ -33,18 +33,8 @@ export async function createCharacter(req, res, next) {
   }
 }
 
-export async function getAllCharacters(req, res, next) {
-  try {
-    const characters = await Character.find();
-    res.status(200).send({ characters });
-  } catch (err) {
-    next(err);
-  }
-}
-
 export async function getCharacter(req, res, next) {
   const { characterName } = req.params;
-  console.log(characterName);
   try {
     const character = await Character.findOne({ characterName });
     res.status(200).json({ character });
