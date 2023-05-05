@@ -1,6 +1,7 @@
 import { Battle } from "../models/Battle.js";
 import Character from "../models/Character.js";
 import { battleRNGMaker } from "../utils/battle-utls.js";
+import { getCharacter } from "./characterController.js";
 
 export async function postBattle(req, res, next) {
   const { characterName } = req.params;
@@ -42,4 +43,22 @@ export async function postBattle(req, res, next) {
   } catch (err) {
     next(err);
   }
+}
+
+export async function getBattles(req, res, next) {
+  const { username } = req.user
+  try {
+    const { characterName } = await Character.findOne({ username });
+    const winningBattles = await Battle.find({
+      $or: [
+        { attacker: characterName },
+        { defender: characterName },
+      ],
+    }).sort({ timeStamp: -1 });
+
+    res.status(200).send({ winningBattles })
+  } catch (err) {
+    next(err);
+  }
+
 }
