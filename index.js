@@ -60,7 +60,7 @@ app.use('/api/battle', battleRoute);
 app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);
 
-  setInterval(updateGoldAtInterval, updateInterval);
+  // setInterval(updateGoldAtInterval, updateInterval);
 });
 
 export default app;
