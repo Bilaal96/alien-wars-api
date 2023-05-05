@@ -1,23 +1,31 @@
 import express from 'express';
-import passport from 'passport';
 
+// Controllers
 import {
-  createCharacter,
+  postCharacter,
   getAllCharacters,
   getCharacter,
 } from '../controllers/characterController.js';
 
 const router = express.Router();
 
-//patch purchase -- updates character with change in gold and attack/defence points -- change character (id) attack/defence, new equiped item & their gold
-
-router.post('/create', createCharacter);
-
-// load up all users on a battlefield
+/**
+ * POST /api/characters - create user character on account creation
+ * GET /api/characters - get all characters from DB
+ * GET /api/characters/single - get single character from DB 
+    - NOTE: a single character is selected based on the query params provided, rather than a route param
+    - This allows us to get a single character via multiple query parameters
+    
+    Examples
+    - Route param = /api/characters/:id
+    - Query params
+      - /api/characters/single?username=billy
+      - /api/characters/single?characterName=bob
+      - /api/characters/single?username=billy&characterName=bob
+ */
+router.post('/', postCharacter);
 router.get('/', getAllCharacters);
-
-// select a user & open up their individual
-router.get('/:characterName', getCharacter);
+router.get('/single', getCharacter);
 
 router.use((err, req, res, next) => {
   if (err) {

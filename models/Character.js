@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
@@ -8,13 +8,9 @@ const characterSchema = new Schema({
   race: { type: String },
   gold: { type: Number },
   attack: { type: Number },
-  defense: { type: Number },
+  defence: { type: Number },
 });
 
-// characterSchema.pre('save', async function (next) {
-//   next();
-// });
-
-const Character = mongoose.model("character", characterSchema);
+const Character = mongoose.model('character', characterSchema);
 
 export default Character;
