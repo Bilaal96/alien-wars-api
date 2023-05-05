@@ -3,6 +3,7 @@ import express from 'express';
 import {
   getItems,
   getSingleItem,
+  patchPurchaseItem,
   postPopulateShop,
 } from '../controllers/shopController.js';
 
@@ -14,6 +15,8 @@ router.post('/populate', postPopulateShop);
 //get items -- loads up shop items (name, stat boost, cost)
 router.get('/', getItems);
 router.get('/:id', getSingleItem);
+
+router.patch('/:id/purchase/', patchPurchaseItem);
 
 router.use((err, req, res, next) => {
   if (err) {
