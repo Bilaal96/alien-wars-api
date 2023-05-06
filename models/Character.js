@@ -9,6 +9,7 @@ const characterSchema = new Schema({
   gold: { type: Number },
   attack: { type: Number },
   defence: { type: Number },
+  inventory: [String],
 });
 
 const Character = mongoose.model('character', characterSchema);

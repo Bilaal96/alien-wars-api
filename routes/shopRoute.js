@@ -1,19 +1,29 @@
 import express from 'express';
 
+// Controllers
 import {
-  getItems,
-  getSingleItem,
-  postPopulateShop,
+  getShopItems,
+  getShopItemById,
+  postPopulateShopWithItems,
+  patchPurchaseShopItem,
 } from '../controllers/shopController.js';
 
 const router = express.Router();
 
-// test how to insert multiple items at once
-router.post('/populate', postPopulateShop);
-
-//get items -- loads up shop items (name, stat boost, cost)
-router.get('/', getItems);
-router.get('/:id', getSingleItem);
+/**
+ * POST /api/shop/populate - repopulates the shop collection with shopData array (defined in shopController.js)
+ * GET /api/shop 
+  - retrieves all items from the shop
+  - or filters items by type when itemType query param is provided
+    - /api/shop?itemType=weapon - get all items where item.type === "weapon"
+    - /api/shop?itemType=armour - get all items where item.type === "armour"
+ * GET /api/shop/:itemId - retrieves a single item from the shop
+ * PATCH /api/shop/:itemId/purchase - purchase an item - updates character stats of the user according to item purchased
+ */
+router.post('/populate', postPopulateShopWithItems);
+router.get('/', getShopItems);
+router.get('/:itemId', getShopItemById);
+router.patch('/:itemId/purchase', patchPurchaseShopItem);
 
 router.use((err, req, res, next) => {
   if (err) {
