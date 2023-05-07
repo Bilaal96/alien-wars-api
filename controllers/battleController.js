@@ -56,3 +56,17 @@ export async function postBattle(req, res, next) {
     next(err);
   }
 }
+
+export async function getBattles(req, res, next) {
+  const { username } = req.user;
+  try {
+    const { characterName } = await Character.findOne({ username });
+    const winningBattles = await Battle.find({
+      $or: [{ attacker: characterName }, { defender: characterName }],
+    }).sort({ timeStamp: -1 });
+
+    res.status(200).send({ winningBattles });
+  } catch (err) {
+    next(err);
+  }
+}
