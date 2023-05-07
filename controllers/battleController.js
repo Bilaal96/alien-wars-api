@@ -57,15 +57,20 @@ export async function postBattle(req, res, next) {
   }
 }
 
-export async function getBattles(req, res, next) {
+export async function getBattleLog(req, res, next) {
   const { username } = req.user;
-  try {
-    const { characterName } = await Character.findOne({ username });
-    const winningBattles = await Battle.find({
-      $or: [{ attacker: characterName }, { defender: characterName }],
-    }).sort({ timeStamp: -1 });
 
-    res.status(200).send({ winningBattles });
+  try {
+    // Find character of user who sent the request
+    const { characterName } = await Character.findOne({ username });
+
+    // Find all battles that the requester (with characterName) has been a part of (as either attacker or defender)
+    const battleLog = await Battle.find()
+      .or([{ attacker: characterName }, { defender: characterName }])
+      // Sort results with most recent battles appearing first in list
+      .sort({ createdAt: 'descending' });
+
+    res.status(200).json({ battleLog });
   } catch (err) {
     next(err);
   }
