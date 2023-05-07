@@ -1,4 +1,4 @@
-import { Shop } from '../models/Shop.js';
+import Shop from '../models/Shop.js';
 import Character from '../models/Character.js';
 
 // Repopulate the shop collection with shopData

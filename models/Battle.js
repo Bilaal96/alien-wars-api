@@ -11,4 +11,6 @@ const battleSchema = new Schema({
   timeStamp: { type: Date, default: Date.now },
 });
 
-export const Battle = mongoose.model('battle', battleSchema);
+const Battle = mongoose.model('battle', battleSchema);
+
+export default Battle;

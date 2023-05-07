@@ -12,4 +12,6 @@ const shopItemSchema = new Schema({
 });
 
 // 3rd argument prevents pluralisation of collection name; i.e. use "shop", not "shops"
-export const Shop = mongoose.model('shop', shopItemSchema, 'shop');
+const Shop = mongoose.model('shop', shopItemSchema, 'shop');
+
+export default Shop;

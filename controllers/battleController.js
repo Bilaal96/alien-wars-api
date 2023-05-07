@@ -1,5 +1,5 @@
 // Models
-import { Battle } from '../models/Battle.js';
+import Battle from '../models/Battle.js';
 import Character from '../models/Character.js';
 
 // Utils
