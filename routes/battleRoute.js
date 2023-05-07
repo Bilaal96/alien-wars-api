@@ -1,11 +1,14 @@
-import express from "express";
-import { postBattle } from "../controllers/battleController.js";
-// import { postBattle } from "../controllers/battleController.js";
+import express from 'express';
+
+// Controllers
+import { postBattle } from '../controllers/battleController.js';
 
 const router = express.Router();
 
-//post sends back the information (battle log)
-router.post("/:characterName/attack", postBattle);
+/**
+ * POST /api/battle/attack/:characterName - conduct battle between requester's character & character with 'characterName'
+ */
+router.post('/attack/:characterName', postBattle);
 
 router.use((err, req, res, next) => {
   if (err) {

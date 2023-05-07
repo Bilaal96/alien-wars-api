@@ -1,4 +1,5 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
+
 const { Schema } = mongoose;
 
 const battleSchema = new Schema({
@@ -10,4 +11,4 @@ const battleSchema = new Schema({
   timeStamp: { type: Date, default: Date.now },
 });
 
-export const Battle = mongoose.model("battle", battleSchema);
+export const Battle = mongoose.model('battle', battleSchema);
