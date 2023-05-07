@@ -1,82 +1,9 @@
 import Shop from '../models/Shop.js';
 import Character from '../models/Character.js';
 
-// Repopulate the shop collection with shopData
-const shopData = [
-  {
-    type: 'weapon',
-    itemName: 'Laser Baton',
-    attack: 10,
-    defence: 0,
-    buff: null,
-    cost: 100,
-  },
-  {
-    type: 'weapon',
-    itemName: 'Plasma Sword',
-    attack: 50,
-    defence: 0,
-    buff: null,
-    cost: 500,
-  },
-  {
-    type: 'weapon',
-    itemName: 'Beam Rifle',
-    attack: 100,
-    defence: 0,
-    buff: null,
-    cost: 1000,
-  },
-  {
-    type: 'armour',
-    itemName: 'Wooden Shield',
-    attack: 0,
-    defence: 10,
-    buff: null,
-    cost: 100,
-  },
-  {
-    type: 'armour',
-    itemName: 'Durasteel Protector',
-    attack: 0,
-    defence: 50,
-    buff: null,
-    cost: 500,
-  },
-  {
-    type: 'armour',
-    itemName: 'Electrum Defender',
-    attack: 0,
-    defence: 100,
-    buff: null,
-    cost: 1000,
-  },
-  {
-    type: 'potion',
-    itemName: 'Health Potion',
-    attack: 0,
-    defence: 0,
-    buff: 'healing',
-    cost: 50,
-  },
-  {
-    type: 'potion',
-    itemName: 'Mana Potion',
-    attack: 0,
-    defence: 0,
-    buff: 'mana',
-    cost: 50,
-  },
-  {
-    type: 'potion',
-    itemName: 'Strength Potion',
-    attack: 10,
-    defence: 0,
-    buff: 'strength',
-    cost: 100,
-  },
-];
+import shopData from '../db/data/dev-data/items.js';
 
+// Repopulate the shop collection with shopData
 export async function postPopulateShopWithItems(req, res, next) {
   try {
     // Delete existing items, then add shopData to shop collection
