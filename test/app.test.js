@@ -76,7 +76,7 @@ describe("tests", () => {
       // Send POST request to create character
       chai
         .request(server)
-        .post("/api/character/create")
+        .post("/api/characters/create")
         .send(characterData)
         .end((err, res) => {
           // Check response status
@@ -101,11 +101,11 @@ describe("tests", () => {
           character.should.have
             .property("attack")
             .that.is.a("number")
-            .equal(10);
+            .equal(100);
           character.should.have
             .property("defense")
             .that.is.a("number")
-            .equal(11);
+            .equal(120);
 
           done();
         });
@@ -115,7 +115,7 @@ describe("tests", () => {
     it("should fetch an array of all characters in the database", (done) => {
       chai
         .request(server)
-        .get("/api/battle")
+        .get("/api/characters")
         .end((err, res) => {
           const { characters } = res.body;
           // Check response status

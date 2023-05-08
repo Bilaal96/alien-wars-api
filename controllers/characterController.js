@@ -13,7 +13,7 @@ export async function createCharacter(req, res, next) {
         username: username,
         characterName: characterName,
         attack: 100,
-        defense: 110,
+        defense: 120,
         gold: 100,
       });
       res.status(201).json({ character });
@@ -22,7 +22,7 @@ export async function createCharacter(req, res, next) {
         race,
         username: username,
         characterName: characterName,
-        attack: 110,
+        attack: 120,
         defense: 100,
         gold: 100,
       });
