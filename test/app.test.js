@@ -38,6 +38,7 @@ describe('GET /api - test endpoint', () => {
   });
 });
 
+/* -------------------------- Auth ------------------------- */
 describe('POST /api/auth/signup - register new user', () => {
   it('201: creates & returns a new user with valid credentials', async () => {
     // ARRANGE - Define user data
@@ -64,6 +65,7 @@ describe('POST /api/auth/signup - register new user', () => {
   });
 });
 
+/* -------------------------- Characters ------------------------- */
 describe("POST /api/characters - create user's character", () => {
   it('201: creates & returns a new character with the expected properties', async () => {
     // ARRANGE - Define data required to create a new character
@@ -127,6 +129,7 @@ describe('GET /api/characters - get all characters', () => {
   });
 });
 
+/* -------------------------- Shop ------------------------- */
 describe('GET /api/shop - get all shop items', () => {
   it('200: returns an array of all shop items in the database', async () => {
     // ACT
@@ -173,3 +176,5 @@ describe('GET /api/shop/:itemId - get item by :itemId', () => {
     shopItem.should.have.property('cost').that.equals(100);
   });
 });
+
+/* -------------------------- Battle ------------------------- */
