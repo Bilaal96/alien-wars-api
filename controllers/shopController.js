@@ -1,28 +1,46 @@
+import Shop from '../models/Shop.js';
 import Character from '../models/Character.js';
-import { Shop } from '../models/Shop.js';
 
-export async function getItems(req, res, next) {
+import shopData from '../db/data/dev-data/items.js';
+
+// Repopulate the shop collection with shopData
+export async function postPopulateShopWithItems(req, res, next) {
   try {
-    const shopItems = await Shop.find();
-    res.status(200).send({ shopItems });
+    // Delete existing items, then add shopData to shop collection
+    await Shop.deleteMany({});
+    const shopItems = await Shop.create(shopData);
+    res.status(200).json({ shopItems });
   } catch (err) {
     next(err);
   }
 }
 
-export async function getSingleItem(req, res, next) {
-  const { id: itemId } = req.params;
+export async function getShopItems(req, res, next) {
+  // Filter items by type if query param is provided, otherwise get all items
+  const { itemType } = req.query;
+  const itemsFilter = itemType ? { type: itemType } : {};
 
   try {
-    const item = await Shop.findById(itemId);
-    res.status(200).send({ item });
+    const shopItems = await Shop.find(itemsFilter);
+    res.status(200).json({ shopItems });
   } catch (err) {
     next(err);
   }
 }
 
-export async function patchPurchaseItem(req, res, next) {
-  const { id: itemId } = req.params; // used to fetch item
+export async function getShopItemById(req, res, next) {
+  const { itemId } = req.params;
+
+  try {
+    const shopItem = await Shop.findById(itemId);
+    res.status(200).json({ shopItem });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function patchPurchaseShopItem(req, res, next) {
+  const { itemId } = req.params; // used to fetch item
   const { username } = req.user; // used to update character
 
   const item = await Shop.findById(itemId);
@@ -43,10 +61,10 @@ export async function patchPurchaseItem(req, res, next) {
     // Update character stats based on item type
     switch (item.type) {
       case 'weapon':
-        character.attack = item.attackStat;
+        character.attack = item.attack;
         break;
       case 'armour':
-        character.defense = item.defenceStat;
+        character.defence = item.defence;
         break;
       default:
         throw Error('Invalid weapon type');
@@ -60,90 +78,5 @@ export async function patchPurchaseItem(req, res, next) {
       console.log(updatedCharacter);
       res.status(200).json({ updatedCharacter });
     });
-  }
-}
-
-// Test populating the DB with one request
-const testShopData = [
-  {
-    type: 'weapon',
-    itemName: 'Laser Baton',
-    attackStat: 10,
-    defenceStat: 0,
-    buff: null,
-    cost: 100,
-  },
-  {
-    type: 'weapon',
-    itemName: 'Plasma Sword',
-    attackStat: 50,
-    defenceStat: 0,
-    buff: null,
-    cost: 500,
-  },
-  {
-    type: 'weapon',
-    itemName: 'Beam Rifle',
-    attackStat: 100,
-    defenceStat: 0,
-    buff: null,
-    cost: 1000,
-  },
-  {
-    type: 'armor',
-    itemName: 'Wooden Shield',
-    attackStat: 0,
-    defenceStat: 10,
-    buff: null,
-    cost: 100,
-  },
-  {
-    type: 'armor',
-    itemName: 'Durasteel Protector',
-    attackStat: 0,
-    defenceStat: 50,
-    buff: null,
-    cost: 500,
-  },
-  {
-    type: 'armor',
-    itemName: 'Electrum Defender',
-    attackStat: 0,
-    defenceStat: 100,
-    buff: null,
-    cost: 1000,
-  },
-  {
-    type: 'potion',
-    itemName: 'Health Potion',
-    attackStat: 0,
-    defenceStat: 0,
-    buff: 'healing',
-    cost: 50,
-  },
-  {
-    type: 'potion',
-    itemName: 'Mana Potion',
-    attackStat: 0,
-    defenceStat: 0,
-    buff: 'mana',
-    cost: 50,
-  },
-  {
-    type: 'potion',
-    itemName: 'Strength Potion',
-    attackStat: 10,
-    defenceStat: 0,
-    buff: 'strength',
-    cost: 100,
-  },
-];
-
-export async function postPopulateShop(req, res, next) {
-  try {
-    const shop = await Shop.create(testShopData);
-    res.status(200).json({ shop });
-  } catch (err) {
-    next(err);
   }
 }

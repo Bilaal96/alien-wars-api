@@ -6,11 +6,16 @@ import User from '../models/User.js';
  * This error is handled via error handling middleware
  */
 export async function registerUser(req, res, next) {
-  const { username, password } = req.body;
+  const { email, username, password } = req.body;
 
   try {
     // User does not exist, create user
-    const user = await User.create({ username, password });
+    const newUser = await User.create({ email, username, password });
+
+    // Construct user response object - delete password
+    const user = { ...newUser._doc };
+    delete user.password;
+
     res.status(201).json({ user });
   } catch (err) {
     next(err);
@@ -20,7 +25,7 @@ export async function registerUser(req, res, next) {
 export async function loginUser(req, res) {
   console.log('login', req.session);
 
-  res.status(200).send({ message: 'User logged in successfully' });
+  res.status(200).json({ message: 'User logged in successfully' });
 }
 
 export async function logoutUser(req, res) {
@@ -63,7 +68,9 @@ export async function deleteUser(req, res, next) {
     if (!deletedUser) {
       return res.status(404).json({ message: 'User not found' });
     }
-    res.status(200).json({ message: 'User deleted successfully', user: deletedUser });
+    res
+      .status(200)
+      .json({ message: 'User deleted successfully', user: deletedUser });
   } catch (err) {
     next(err);
   }

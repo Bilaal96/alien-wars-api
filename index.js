@@ -5,11 +5,13 @@ import passport from 'passport';
 import MongoStore from 'connect-mongo';
 import cors from 'cors';
 
-import battleRoute from './routes/battleRoute.js';
+// Routes
 import authRoute from './routes/authRoute.js';
 import characterRoute from './routes/characterRoute.js';
+import battleRoute from './routes/battleRoute.js';
 import shopRoute from './routes/shopRoute.js';
 
+// Utils
 import {
   updateGoldAtInterval,
   updateInterval,
@@ -51,18 +53,19 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get('/api', (req, res) => {
-  res.status(200).send({ msg: 'Test endpoint' });
+  res.status(200).json({ message: 'Welcome to Cosmic Conflict' });
 });
 
 app.use('/api/auth', authRoute);
 app.use('/api/characters', characterRoute);
-app.use('/api/shop', shopRoute);
 app.use('/api/battle', battleRoute);
+app.use('/api/shop', shopRoute);
 
 app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);
 
-  // setInterval(updateGoldAtInterval, updateInterval);
+  // Update each character's gold at the given interval
+  setInterval(updateGoldAtInterval, updateInterval);
 });
 
 export default app;

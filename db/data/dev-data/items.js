@@ -1,4 +1,4 @@
-// NOTE: weapon stats should be higher than player/character base stats to meet gameplay requirements
+// NOTE: weapon stats should be higher than player/character base stats
 export default [
   {
     type: 'weapon',

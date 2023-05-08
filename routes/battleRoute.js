@@ -1,12 +1,16 @@
-import express from "express";
-import { postBattle, getBattles } from "../controllers/battleController.js";
-// import { postBattle } from "../controllers/battleController.js";
+import express from 'express';
+
+// Controllers
+import { getBattleLog, postBattle } from '../controllers/battleController.js';
 
 const router = express.Router();
 
-//post sends back the information (battle log)
-router.post("/:characterName/attack", postBattle);
-router.get("/battle-log", getBattles)
+/**
+ * POST /api/battle/attack/:characterName - conduct battle between requester's character & character with ':characterName'
+ * GET /api/battle/log - get list of all battles that the requester has been a part of
+ */
+router.post('/attack/:characterName', postBattle);
+router.get('/log', getBattleLog);
 
 router.use((err, req, res, next) => {
   if (err) {
