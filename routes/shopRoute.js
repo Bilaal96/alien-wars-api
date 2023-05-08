@@ -11,7 +11,7 @@ import {
 const router = express.Router();
 
 /**
- * POST /api/shop/populate - repopulates the shop collection with shopData array (defined in shopController.js)
+ * POST /api/shop/populate - repopulates the shop collection with shopData array (defined in /db/data/dev-data/items.js)
  * GET /api/shop 
   - retrieves all items from the shop
   - or filters items by type when itemType query param is provided

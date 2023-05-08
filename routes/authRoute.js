@@ -1,5 +1,7 @@
 import express from 'express';
+import passport from 'passport';
 
+// Controllers
 import {
   deleteUser,
   loginUser,
@@ -7,7 +9,6 @@ import {
   registerUser,
   updatePassword,
 } from '../controllers/authController.js';
-import passport from 'passport';
 
 const router = express.Router();
 

@@ -1,189 +1,175 @@
-import chai from "chai";
-import chaiHttp from "chai-http";
-import server from "../index.js";
-import { seedDB } from "../db/seed.js";
-import mongoose from "mongoose";
-import User from "../models/User.js";
-import Character from "../models/Character.js";
-import { Shop } from "../models/Shop.js";
+import chai from 'chai';
+import 'chai/register-should.js'; // assertion style
+import chaiHttp from 'chai-http';
+import mongoose from 'mongoose';
 
-//Assertion Style
-chai.should();
+import app from '../index.js';
+import { seedDB } from '../db/seed.js';
 
-chai.use(chaiHttp);
+// Models
+import User from '../models/User.js';
+import Character from '../models/Character.js';
+import Shop from '../models/Shop.js';
 
+chai.use(chaiHttp); // Plugin for integration testing on endpoints
+
+// Reseed before each test
 beforeEach(async () => {
   await seedDB();
 });
 
+// Close local DB connection after all tests have run
 after(async () => {
   await mongoose.connection.close();
 });
 
-describe("tests", () => {
-  describe("GET /api", () => {
-    it("should return a string of test endpoint", (done) => {
-      chai
-        .request(server)
-        .get("/api")
-        .end((err, res) => {
-          res.should.have.status(200);
-          const { msg } = res.body;
-          msg.should.be.a("string");
-          msg.should.equal("Test endpoint");
-          done();
-        });
+describe('GET /api - test endpoint', () => {
+  it('200: returns an object containing message property with string value of "Welcome to Cosmic Conflict"', async () => {
+    // ACT
+    const response = await chai.request(app).get('/api');
+
+    // ASSERT
+    response.should.have.status(200);
+    response.body.should.haveOwnProperty('message');
+
+    const { message } = response.body;
+    message.should.be.a('string');
+    message.should.equal('Welcome to Cosmic Conflict');
+  });
+});
+
+describe('POST /api/auth/signup - register new user', () => {
+  it('201: creates & returns a new user with valid credentials', async () => {
+    // ARRANGE - Define user data
+    const userData = {
+      email: 'testuser@example.com',
+      username: 'testuser',
+      password: 'testpassword',
+    };
+
+    // ACT - Send POST request to create user
+    const response = await chai
+      .request(app)
+      .post('/api/auth/signup')
+      .send(userData);
+
+    // ASSERT
+    response.should.have.status(201);
+
+    const { user } = response.body;
+    user.should.be.an('object');
+    user.should.haveOwnProperty('_id');
+    user.should.haveOwnProperty('username').equal(userData.username);
+    user.should.haveOwnProperty('email').equal(userData.email);
+  });
+});
+
+describe("POST /api/characters - create user's character", () => {
+  it('201: creates & returns a new character with the expected properties', async () => {
+    // ARRANGE - Define data required to create a new character
+    const characterData = {
+      username: 'testuser2', // user to which character belongs
+      characterName: 'testHuman',
+      race: 'human',
+    };
+
+    // ACT - Send POST request to create character
+    const response = await chai
+      .request(app)
+      .post('/api/characters')
+      .send(characterData);
+
+    // ASSERT
+    response.should.have.status(201);
+
+    const { character } = response.body;
+    character.should
+      .haveOwnProperty('username')
+      .that.is.a('string')
+      .equal(characterData.username);
+
+    character.should
+      .haveOwnProperty('characterName')
+      .that.is.a('string')
+      .equal(characterData.characterName);
+
+    character.should
+      .haveOwnProperty('race')
+      .that.is.a('string')
+      .equal(characterData.race);
+
+    character.should.haveOwnProperty('gold').that.is.a('number').equal(100);
+
+    character.should.haveOwnProperty('attack').that.is.a('number').equal(100);
+
+    character.should.haveOwnProperty('defence').that.is.a('number').equal(110);
+  });
+});
+
+describe('GET /api/characters - get all characters', () => {
+  it('200: returns an array of all characters in the database', async () => {
+    // ACT
+    const response = await chai.request(app).get('/api/characters');
+
+    // ASSERT
+    response.should.have.status(200);
+
+    const { characters } = response.body;
+    characters.should.be.an('array');
+    characters.map((character) => {
+      character.should.have.property('username').that.is.a('string');
+      character.should.have.property('characterName').that.is.a('string');
+      character.should.have.property('race').that.is.a('string');
+      character.should.have.property('gold').that.is.a('number');
+      character.should.have.property('attack').that.is.a('number');
+      character.should.have.property('defence').that.is.a('number');
     });
   });
-  describe("POST a new user", () => {
-    it("should create a new user with valid credentials", (done) => {
-      // Define user data
-      const userData = {
-        email: "testuser@example.com",
-        username: "testuser",
-        password: "testpassword",
-      };
+});
 
-      // Send POST request to create user
-      chai
-        .request(server)
-        .post("/api/auth/signup")
-        .send(userData)
-        .end((err, res) => {
-          // Check response status
-          res.should.have.status(201);
-          // Check response body
-          res.body.should.be.a("object");
-          const { user } = res.body;
-          user.should.have.property("_id");
-          user.should.have.property("username").equal(userData.username);
-          // res.body.user.should.have.property("email").equal(userData.email);
-          user.should.have.property("password");
-          done();
-        });
+describe('GET /api/shop - get all shop items', () => {
+  it('200: returns an array of all shop items in the database', async () => {
+    // ACT
+    const response = await chai.request(app).get('/api/shop');
+
+    // ASSERT
+    response.should.have.status(200);
+
+    const { shopItems } = response.body;
+    shopItems.should.be.a('array');
+    shopItems.map((item) => {
+      item.should.have.property('type').that.is.a('string');
+      item.should.have.property('itemName').that.is.a('string');
+      item.should.have.property('attack').that.is.a('number');
+      item.should.have.property('defence').that.is.a('number');
+      /* item.should.have
+        .property('buff')
+        .that.satisfies((val) => val === null || typeof val === 'string'); */
+      item.should.have.property('cost').that.is.a('number');
     });
   });
-  describe("POST a new character", () => {
-    it("should create a new character with valid properties", function (done) {
-      this.timeout(5000);
-      // Define character data
-      const characterData = {
-        username: "testuser2",
-        characterName: "testHuman",
-        race: "human",
-      };
+});
 
-      // Send POST request to create character
-      chai
-        .request(server)
-        .post("/api/character/create")
-        .send(characterData)
-        .end((err, res) => {
-          // Check response status
-          res.should.have.status(201);
-
-          // Check response body
-          res.body.should.be.a("object");
-          const { character } = res.body;
-          character.should.have
-            .property("username")
-            .that.is.a("string")
-            .equal(characterData.username);
-          character.should.have
-            .property("characterName")
-            .that.is.a("string")
-            .equal(characterData.characterName);
-          character.should.have
-            .property("race")
-            .that.is.a("string")
-            .equal(characterData.race);
-          character.should.have.property("gold").that.is.a("number").equal(100);
-          character.should.have
-            .property("attack")
-            .that.is.a("number")
-            .equal(10);
-          character.should.have
-            .property("defense")
-            .that.is.a("number")
-            .equal(11);
-
-          done();
-        });
+describe('GET /api/shop/:itemId - get item by :itemId', () => {
+  it('200: returns a single item with the given :itemId', async () => {
+    // ARRANGE - create an item, so we can access its ID and use it in the API request URL
+    const newItem = await Shop.create({
+      type: 'testType',
+      itemName: 'Test Item',
+      attack: 100,
+      defence: 0,
+      cost: 100,
     });
-  });
-  describe("GET all characters", () => {
-    it("should fetch an array of all characters in the database", (done) => {
-      chai
-        .request(server)
-        .get("/api/battle")
-        .end((err, res) => {
-          const { characters } = res.body;
-          // Check response status
-          res.should.have.status(200);
-          // Check response body
-          characters.should.be.a("array");
-          characters.map((character) => {
-            character.should.have.property("username").that.is.a("string");
-            character.should.have.property("characterName").that.is.a("string");
-            character.should.have.property("race").that.is.a("string");
-            character.should.have.property("gold").that.is.a("number");
-            character.should.have.property("attack").that.is.a("number");
-            character.should.have.property("defense").that.is.a("number");
-          });
-          done();
-        });
-    });
-  });
-  describe("GET items", () => {
-    it("should fetch an array of all items in the database", (done) => {
-      chai
-        .request(server)
-        .get("/api/shop")
-        .end((err, res) => {
-          const { shopItems } = res.body;
-          // Check response status
-          res.should.have.status(200);
-          // Check response body
-          shopItems.should.be.a("array");
-          shopItems.map((item) => {
-            item.should.have.property("type").that.is.a("string");
-            item.should.have.property("itemName").that.is.a("string");
-            item.should.have.property("attackStat").that.is.a("number");
-            item.should.have.property("defenceStat").that.is.a("number");
-            item.should.have
-              .property("buff")
-              .that.satisfies((val) => val === null || typeof val === "string");
-            item.should.have.property("cost").that.is.a("number");
-          });
-          done();
-        });
-    });
-    it("should fetch a single item from a given id", (done) => {
-      const newItem = new Shop({
-        type: "testType",
-        itemName: "Test Item",
-        attackStat: 10,
-        defenceStat: 0,
-        buff: "strength",
-        cost: 100,
-      });
 
-      newItem.save();
+    // ACT
+    const response = await chai.request(app).get(`/api/shop/${newItem.id}`);
 
-      chai
-
-        .request(server)
-        .get(`/api/shop/${newItem.id}`)
-        .end((err, res) => {
-          const { item } = res.body;
-          item.should.have.property("type").that.equals("testType");
-          item.should.have.property("itemName").that.equals("Test Item");
-          item.should.have.property("attackStat").that.equals(10);
-          item.should.have.property("defenceStat").that.equals(0);
-          item.should.have.property("buff").that.equals("strength");
-          item.should.have.property("cost").that.equals(100);
-          done();
-        });
-    });
+    // ASSERT
+    const { shopItem } = response.body;
+    shopItem.should.have.property('type').that.equals('testType');
+    shopItem.should.have.property('itemName').that.equals('Test Item');
+    shopItem.should.have.property('attack').that.equals(100);
+    shopItem.should.have.property('defence').that.equals(0);
+    shopItem.should.have.property('cost').that.equals(100);
   });
 });

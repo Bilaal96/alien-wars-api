@@ -8,8 +8,8 @@ export async function postCharacter(req, res, next) {
       // Create a character with base properties of a human
       const character = await Character.create({
         race,
-        username: username,
-        characterName: characterName,
+        username,
+        characterName,
         attack: 100,
         defence: 110,
         gold: 100,
@@ -19,8 +19,8 @@ export async function postCharacter(req, res, next) {
       // Create a character with base properties of an alien
       const character = await Character.create({
         race,
-        username: username,
-        characterName: characterName,
+        username,
+        characterName,
         attack: 110,
         defence: 100,
         gold: 100,

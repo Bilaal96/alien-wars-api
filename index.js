@@ -6,9 +6,9 @@ import MongoStore from 'connect-mongo';
 import cors from 'cors';
 
 // Routes
-import battleRoute from './routes/battleRoute.js';
 import authRoute from './routes/authRoute.js';
 import characterRoute from './routes/characterRoute.js';
+import battleRoute from './routes/battleRoute.js';
 import shopRoute from './routes/shopRoute.js';
 
 // Utils
@@ -53,7 +53,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get('/api', (req, res) => {
-  res.status(200).send({ msg: 'Welcome to Cosmic Conflict' });
+  res.status(200).json({ message: 'Welcome to Cosmic Conflict' });
 });
 
 app.use('/api/auth', authRoute);
