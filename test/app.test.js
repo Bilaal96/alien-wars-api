@@ -104,7 +104,9 @@ describe("POST /api/characters - create user's character", () => {
 
     character.should.haveOwnProperty('attack').that.is.a('number').equal(100);
 
-    character.should.haveOwnProperty('defence').that.is.a('number').equal(110);
+    character.should.haveOwnProperty('defence').that.is.a('number').equal(120);
+
+    character.should.haveOwnProperty('inventory').that.is.a('array')
   });
 });
 
@@ -125,6 +127,7 @@ describe('GET /api/characters - get all characters', () => {
       character.should.have.property('gold').that.is.a('number');
       character.should.have.property('attack').that.is.a('number');
       character.should.have.property('defence').that.is.a('number');
+      character.should.have.property('inventory').that.is.a('array');
     });
   });
 });

@@ -11,7 +11,7 @@ export async function postCharacter(req, res, next) {
         username,
         characterName,
         attack: 100,
-        defence: 110,
+        defence: 120,
         gold: 100,
       });
       res.status(201).json({ character });
@@ -21,7 +21,7 @@ export async function postCharacter(req, res, next) {
         race,
         username,
         characterName,
-        attack: 110,
+        attack: 120,
         defence: 100,
         gold: 100,
       });
