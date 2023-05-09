@@ -18,7 +18,6 @@ import {
 } from './utils/increment-all-user-gold.js';
 
 dotenv.config();
-const PORT = 9090;
 const app = express();
 
 app.use(cors());
@@ -60,6 +59,8 @@ app.use('/api/auth', authRoute);
 app.use('/api/characters', characterRoute);
 app.use('/api/battle', battleRoute);
 app.use('/api/shop', shopRoute);
+
+const { PORT = 9090 } = process.env;
 
 app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);
