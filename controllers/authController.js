@@ -1,3 +1,4 @@
+import Character from '../models/Character.js';
 import User from '../models/User.js';
 
 /** registerUser
@@ -23,9 +24,20 @@ export async function registerUser(req, res, next) {
 }
 
 export async function loginUser(req, res) {
-  console.log('login', req.session);
+  const { username } = req.body;
 
-  res.status(200).json({ message: 'User logged in successfully' });
+  // Checking if user exists & validating the submitted password is handled by verifyCallback in passport.js
+
+  // User with the provided username does not exist
+  if (!req.user) {
+    return res
+      .status(400)
+      .json({ message: 'Invalid username or password provided' });
+  }
+
+  // Find & return the character with the given username
+  const character = await Character.find({ username });
+  res.status(200).json({ character });
 }
 
 export async function logoutUser(req, res) {
