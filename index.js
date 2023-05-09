@@ -13,9 +13,9 @@ import shopRoute from './routes/shopRoute.js';
 
 // Utils
 import {
-  updateGoldAtInterval,
-  updateInterval,
-} from './utils/update-gold-at-interval.js';
+  incrementAllUserGold,
+  updateGoldInterval,
+} from './utils/increment-all-user-gold.js';
 
 dotenv.config();
 const PORT = 9090;
@@ -65,7 +65,7 @@ app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);
 
   // Update each character's gold at the given interval
-  setInterval(updateGoldAtInterval, updateInterval);
+  setInterval(incrementAllUserGold, updateGoldInterval);
 });
 
 export default app;
