@@ -15,6 +15,11 @@ export async function postPopulateShopWithItems(req, res, next) {
   }
 }
 
+/**
+ * TODO: Possible improvement to getShopItems
+ * Only send back items that a user does not own
+ * Or suggest on frontend to add a check for character attack/defence > item attack/defence - then show message - attack/defence level too low
+ */
 export async function getShopItems(req, res, next) {
   // Filter items by type if query param is provided, otherwise get all items
   const { itemType } = req.query;
@@ -46,37 +51,46 @@ export async function patchPurchaseShopItem(req, res, next) {
   const item = await Shop.findById(itemId);
   const character = await Character.findOne({ username });
 
-  // Check if inventory already contains the item
   if (character.gold < item.cost) {
-    res
+    // User does not have enough gold
+    return res
       .status(400)
       .json({ message: "You don't have enough gold to purchase this item" });
-  } else if (character.inventory.includes(item.itemName)) {
-    // Character already owns item
-    res.status(400).json({ message: 'You already own this item' });
-  } else {
-    // Add item to inventory
-    character.inventory.push(item.itemName);
+  } else if (item.itemName === character.inventory[item.type]) {
+    // Determine if item for requested purchase is already equipped
+    return res
+      .status(400)
+      .json({ message: 'You already have this item equipped' });
+  }
 
-    // Update character stats based on item type
-    switch (item.type) {
-      case 'weapon':
-        character.attack = item.attack;
-        break;
-      case 'armour':
-        character.defence = item.defence;
-        break;
-      default:
-        throw Error('Invalid weapon type');
-    }
+  // Does equipped item have higher attack/defence stat
+  const isItemAnUpgrade = (affectedStat) =>
+    item[affectedStat] > character[affectedStat];
 
-    // Update user gold
-    character.gold -= item.cost;
-
-    // Save updates to character in DB
+  // Reusable function to update character in DB
+  const saveChangesToCharacter = async () => {
     await character.save().then((updatedCharacter) => {
       console.log(updatedCharacter);
-      res.status(200).json({ updatedCharacter });
+      return res.status(200).json({ updatedCharacter });
     });
+  };
+
+  if (item.type === 'weapon' && isItemAnUpgrade('attack')) {
+    // Update weapon slot
+    character.inventory[item.type] = item.itemName;
+    // Update character attack stat
+    character.attack = item.attack;
+    // Save updates to character in DB
+    return await saveChangesToCharacter();
+  } else if (item.type === 'armour' && isItemAnUpgrade('defence')) {
+    // Update armour slot
+    character.inventory[item.type] = item.itemName;
+    // Update character defence stat
+    character.defence = item.defence;
+    // Save updates to character in DB
+    return await saveChangesToCharacter();
+  } else {
+    // Item does not improve character stats - do not buy
+    return res.status(400).json({ message: 'You already have a better item' });
   }
 }
